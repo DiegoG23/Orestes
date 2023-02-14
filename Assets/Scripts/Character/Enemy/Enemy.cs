@@ -1,17 +1,26 @@
+using System;
 using UnityEngine;
 
 
-public abstract class Enemy : Character, ISpinnable
+public abstract class Enemy : Character
 {
     [SerializeField] protected Transform target;
     [SerializeField] protected float rotationSpeed = 10.0f;
-    public bool TargetOnSight { get; private set; } = true;
+    [SerializeField] protected float visionRange;
+    [SerializeField] protected float viewConeAngle;
+    [SerializeField] protected Light viewCone;
 
-    public float RotationSpeed { get => rotationSpeed; }
-    public Transform Self { get => transform; }
+    public bool TargetOnSight { get; protected set; } = false;
 
-    public void LookAtTarget(Vector3 target)
+    public abstract void Disable();
+
+    private void Start()
     {
-        CharacterActions.LookAtTarget(this, target);
+        target = GameManager.instance.Player.transform;
     }
+
+    private void Update()
+    {
+    }
+
 }

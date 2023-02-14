@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Vectores
 {
-    public class BossEnemy : Enemy, IShooter, IMovable
+    public class BossEnemy : Enemy
     {
         [SerializeField] private Transform gunPlaceholder;
         [SerializeField] private EnemyState state = EnemyState.ALERT;
@@ -24,14 +24,6 @@ namespace Vectores
         void Update()
         {
             HandleState();
-            /*
-            ToggleShoot(TargetOnSight);
-            if (TargetOnSight)
-            {
-                LookAtPosition(Target);
-                MoveToTarget(Target);
-            }
-            */
         }
 
         private void HandleState()
@@ -39,38 +31,36 @@ namespace Vectores
             switch (state)
             {
                 case EnemyState.SHOOTING:
-                    LookAtTarget(target.position);
                     Shoot(target);
                     break;
                 case EnemyState.ALERT:
-                    LookAtTarget(target.position);
                     break;
                 case EnemyState.PURSUIT:
                     MoveToTarget(target.position);
                     break;
                 case EnemyState.IDLE:
                 default:
-                    DoNothing();
+                    Patrol();
                     break;
             }
         }
         public void Shoot(Transform target)
         {
-            CharacterActions.Shoot(this, target);
+
         }
 
 
         public void MoveToTarget(Vector3 target)
         {
-            CharacterActions.MoveToTarget(this, target);
+
         }
 
-        public void DoNothing()
+        public void Patrol()
         {
-            Debug.Log("DOING NOTHING");
+            
         }
 
-        public void Shoot()
+        public override void Disable()
         {
             throw new NotImplementedException();
         }

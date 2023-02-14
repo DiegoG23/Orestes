@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    [SerializeField] public Player Player { get; private set; }
 
     public static GameManager instance;
     public bool dontDestroyOnLoad;
@@ -26,11 +27,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 
+
     }
 
     private void Update()
     {
     }
 
-
+    internal void WinLevel()
+    {
+        Debug.Log("COLISION CON FINISH ZONE");
+        Debug.Log("YOU WIN!!!!");
+    }
 }

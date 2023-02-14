@@ -4,4 +4,5 @@ public enum EnemyState
     ALERT,
     PURSUIT,
     SHOOTING,
+    DISABLED,
 }
