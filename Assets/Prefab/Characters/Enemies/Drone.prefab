@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 326881691}
   m_Layer: 8
   m_Name: Drone
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -201,16 +201,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f2d51b9587521e4485d80068e84ffa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
   speed: 8
-  dashLength: 5
+  health: 100
+  damage: 1
+  player: {fileID: 0}
   rotationSpeed: 300
-  floatOffset: 0.1
-  fireKeyCode: 0
-  crouchKeyCode: 0
-  dashKeyCode: 0
-  vAxisName: Vertical
-  hAxisName: Horizontal
+  visionRange: 10.6
+  viewConeAngle: 40
+  viewCone: {fileID: 1915602787148597573}
+  state: 0
 --- !u!114 &1968132592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,8 +224,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 1968132589}
   waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -353,9 +350,9 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 1, g: 0.4875, b: 0, a: 1}
-  m_Intensity: 9000
-  m_Range: 17
+  m_Color: {r: 0.31055474, g: 1, b: 0, a: 1}
+  m_Intensity: 99000
+  m_Range: 11
   m_SpotAngle: 75
   m_InnerSpotAngle: 75
   m_CookieSize: 10
@@ -391,7 +388,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2689
+    m_Bits: 2753
   m_RenderingLayerMask: 1
   m_Lightmapping: 1
   m_LightShadowCasterMode: 0

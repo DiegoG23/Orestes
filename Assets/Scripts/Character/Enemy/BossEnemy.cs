@@ -12,13 +12,13 @@ namespace Vectores
         [SerializeField] private EnemyState state = EnemyState.ALERT;
 
         [SerializeField] private float followTargetOffset = 2.0f;
-        [SerializeField] private float speed = 8.0f;
 
         public float FollowTargetOffset { get => followTargetOffset; }
         public float Speed { get => speed; }
 
         void Start()
         {
+
         }
 
         void Update()
@@ -31,12 +31,12 @@ namespace Vectores
             switch (state)
             {
                 case EnemyState.SHOOTING:
-                    Shoot(target);
+                    Shoot(player.transform);
                     break;
                 case EnemyState.ALERT:
                     break;
                 case EnemyState.PURSUIT:
-                    MoveToTarget(target.position);
+                    MoveToTarget(player.transform.position);
                     break;
                 case EnemyState.IDLE:
                 default:

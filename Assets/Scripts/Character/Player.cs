@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Player : Character
 {
-    [SerializeField] private float speed = 5.0f;
     [SerializeField] private float crouchedSpeed = 3.5f;
     [SerializeField] private float dashLength = 5.0f;
     //KeyCodes
@@ -15,21 +15,14 @@ public class Player : Character
     [SerializeField] private float pulseDelay = 5f;
     [SerializeField] private float dashDelay = 5f;
 
-    //Animators
-    [SerializeField] private Animator playerAnimator;
-
     //Prefabs
     [SerializeField] private GameObject pulsePrefab;
 
+    private bool isDead = false;
     private float nextPulseAvailableTime = 0;
     private bool isCrouched = false;
     public bool IsDetected { get; private set; }
-
-
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
+    public bool IsDead { get => isDead; private set => isDead = value; }
 
     void Start()
     {
@@ -45,10 +38,13 @@ public class Player : Character
 
     void InputHandler()
     {
-        MovementHandler();
-        CrouchHandler();
-        DashHandler();
-        PulseHandler();
+        if (!IsDead)
+        {
+            MovementHandler();
+            CrouchHandler();
+            DashHandler();
+            PulseHandler();
+        }
     }
 
     private void CrouchHandler()
@@ -58,7 +54,7 @@ public class Player : Character
             isCrouched = !isCrouched;
             agent.speed = isCrouched ? crouchedSpeed : speed;
             StopAgentOnPlace();
-            playerAnimator.SetBool("isCrouched", isCrouched);
+            animator.SetBool("isCrouched", isCrouched);
         }
     }
 
@@ -69,9 +65,16 @@ public class Player : Character
         {
             nextPulseAvailableTime = Time.time + pulseDelay;
             StopAgentOnPlace();
-            GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity, playerAnimator.transform);
+            GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity, animator.transform);
             Destroy(pulse, pulseDelay);
         }
+    }
+
+    internal void Die()
+    {
+        isDead = true;
+        animator.SetBool("isDead", isDead);
+        GameManager.instance.LoseLevel();
     }
 
     private void DashHandler()
@@ -104,7 +107,7 @@ public class Player : Character
         }
 
         float velocity = agent.isStopped ? 0 : agent.velocity.magnitude;
-        playerAnimator.SetFloat("speed", velocity);
+        animator.SetFloat("speed", velocity);
     }
 
 

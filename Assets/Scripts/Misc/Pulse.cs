@@ -20,7 +20,7 @@ public class Pulse : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            if(other.TryGetComponent<Enemy>(out Enemy enemy))
+            if(other.TryGetComponent(out Enemy enemy))
             {
                 enemy.Disable();
             }

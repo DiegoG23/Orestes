@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] public Player Player { get; private set; }
+    [SerializeField] private Player player;
 
     public static GameManager instance;
     public bool dontDestroyOnLoad;
+
+    public Player Player { get => player; private set => player = value; }
 
     private void Awake()
     {
@@ -36,7 +38,11 @@ public class GameManager : MonoBehaviour
 
     internal void WinLevel()
     {
-        Debug.Log("COLISION CON FINISH ZONE");
         Debug.Log("YOU WIN!!!!");
+    }
+
+    internal void LoseLevel()
+    {
+        Debug.Log("YOU LOSE!!!!");
     }
 }

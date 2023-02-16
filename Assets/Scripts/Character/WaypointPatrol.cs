@@ -12,12 +12,12 @@ public class WaypointPatrol : MonoBehaviour
     int m_CurrentWaypointIndex;
     void Start()
     {
-        navMeshAgent.SetDestination(waypoints[0].position);
+        Patrol();
     }
 
     void Update()
     {
-        if (navMeshAgent.remainingDistance < navMeshAgent.stoppingDistance) {
+        if (CheckWaypointsExistance() && navMeshAgent.remainingDistance < navMeshAgent.stoppingDistance) {
             m_CurrentWaypointIndex = (m_CurrentWaypointIndex + 1) % waypoints.Length;
             navMeshAgent.SetDestination(waypoints[m_CurrentWaypointIndex].position);
         }
@@ -26,7 +26,7 @@ public class WaypointPatrol : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (waypoints != null && waypoints.Length > 0)
+        if (CheckWaypointsExistance())
         {
             Vector3 startPosition = waypoints[0].position;
             Vector3 previousPosition = startPosition;
@@ -39,5 +39,18 @@ public class WaypointPatrol : MonoBehaviour
             }
             Gizmos.DrawLine(previousPosition, startPosition);
         }
+    }
+
+    void Patrol()
+    {
+        if (CheckWaypointsExistance())
+        {
+            navMeshAgent.SetDestination(waypoints[0].position);
+        }
+    }
+
+    private bool CheckWaypointsExistance()
+    {
+        return waypoints != null && waypoints.Length > 0 && waypoints[0] != null;
     }
 }
