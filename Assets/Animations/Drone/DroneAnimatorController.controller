@@ -445,7 +445,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DroneDisabled
+  m_Name: EnemyDisabled
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -515,7 +515,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DroneAlert
+  m_Name: EnemyAlert
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -614,7 +614,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DroneFire
+  m_Name: EnemyFire
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

@@ -11,23 +11,20 @@ public class Player : Character
     [SerializeField] private KeyCode crouchKeyCode = KeyCode.C;
     [SerializeField] private KeyCode dashKeyCode = KeyCode.F;
     [SerializeField] private KeyCode pulseKeyCode = KeyCode.D;
-    //Delays
-    [SerializeField] private float pulseDelay = 5f;
-    [SerializeField] private float dashDelay = 5f;
+    //Cooldowns
+    [SerializeField] private float pulseCooldown = 5f;
+    [SerializeField] private float dashCooldown = 5f;
 
     //Prefabs
     [SerializeField] private GameObject pulsePrefab;
 
-    private bool isDead = false;
-    private float nextPulseAvailableTime = 0;
-    private bool isCrouched = false;
-    public bool IsDetected { get; private set; }
-    public bool IsDead { get => isDead; private set => isDead = value; }
+    private float _pulseCooldownEndTime = 0;
+    private float _dashCooldownEndTime = 0;
+    private bool _isDead = false;
+    private bool _isCrouched = false;
 
-    void Start()
-    {
-        agent.speed = speed;
-    }
+    public bool IsDetected { get; private set; }
+    public bool IsDead { get => _isDead; private set => _isDead = value; }
 
 
     void Update()
@@ -51,36 +48,47 @@ public class Player : Character
     {
         if (Input.GetKeyDown(crouchKeyCode))
         {
-            isCrouched = !isCrouched;
-            agent.speed = isCrouched ? crouchedSpeed : speed;
+            _isCrouched = !_isCrouched;
+            _agent.speed = _isCrouched ? crouchedSpeed : speed;
             StopAgentOnPlace();
-            animator.SetBool("isCrouched", isCrouched);
+            _animator.SetBool("isCrouched", _isCrouched);
         }
     }
 
 
     private void PulseHandler()
     {
-        if (Input.GetKeyDown(pulseKeyCode) && nextPulseAvailableTime <= Time.time)
+        if (Input.GetKeyDown(pulseKeyCode) && _pulseCooldownEndTime <= Time.time)
         {
-            nextPulseAvailableTime = Time.time + pulseDelay;
+            _pulseCooldownEndTime = Time.time + pulseCooldown;
             StopAgentOnPlace();
-            GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity, animator.transform);
-            Destroy(pulse, pulseDelay);
+            GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity, _animator.transform);
+            Destroy(pulse, pulseCooldown);
         }
     }
 
     internal void Die()
     {
-        isDead = true;
-        animator.SetBool("isDead", isDead);
+        _isDead = true;
+        _animator.SetBool("isDead", _isDead);
+        _agent.enabled = false;
         GameManager.instance.LoseLevel();
     }
 
     private void DashHandler()
     {
-        if (Input.GetKeyDown(dashKeyCode))
+
+        if (Input.GetKeyDown(pulseKeyCode) && _pulseCooldownEndTime <= Time.time)
         {
+            _pulseCooldownEndTime = Time.time + pulseCooldown;
+            StopAgentOnPlace();
+            GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity, _animator.transform);
+            Destroy(pulse, pulseCooldown);
+        }
+
+        if (Input.GetKeyDown(dashKeyCode) && _dashCooldownEndTime <= Time.time)
+        {
+            _dashCooldownEndTime = Time.time + dashCooldown;
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             LayerMask layerMask = LayerMask.GetMask("PlayerNav");
@@ -94,7 +102,7 @@ public class Player : Character
                 }
                 Debug.Log("ray hit: " + hit.point.ToString());
                 Debug.Log("newPos: " + newPosition.ToString());
-                agent.Warp(newPosition);
+                _agent.Warp(newPosition);
             }
         }
     }
@@ -106,8 +114,8 @@ public class Player : Character
             MoveToClickPoint();
         }
 
-        float velocity = agent.isStopped ? 0 : agent.velocity.magnitude;
-        animator.SetFloat("speed", velocity);
+        float velocity = _agent.isStopped ? 0 : _agent.velocity.magnitude;
+        _animator.SetFloat("speed", velocity);
     }
 
 
@@ -120,12 +128,8 @@ public class Player : Character
 
         if (Physics.Raycast(ray, out hit, 100f, layerMask))
         {
-            agent.destination = hit.point;
+            _agent.destination = hit.point;
         }
     }
 
-    private void StopAgentOnPlace()
-    {
-        agent.destination = agent.transform.position;
-    }
 }

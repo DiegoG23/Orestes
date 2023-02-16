@@ -1,6 +1,6 @@
 public enum EnemyState
 {
-    IDLE,
+    PATROL,
     ALERT,
     PURSUIT,
     SHOOTING,

@@ -6,16 +6,21 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected float speed = 5.0f;
     [SerializeField] protected int health = 5;
     [SerializeField] protected int damage = 1;
-    protected NavMeshAgent agent;
-    protected Animator animator;
+    protected NavMeshAgent _agent;
+    protected Animator _animator;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+        _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
     }
-    private void Start()
+    protected virtual void Start()
     {
-        agent.speed = speed;
+        _agent.speed = speed;
+    }
+
+    protected void StopAgentOnPlace()
+    {
+        _agent.destination = _agent.transform.position;
     }
 }

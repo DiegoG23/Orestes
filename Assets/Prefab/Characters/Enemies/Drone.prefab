@@ -164,7 +164,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 6
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -201,14 +201,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f2d51b9587521e4485d80068e84ffa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 4
   health: 100
   damage: 1
-  player: {fileID: 0}
   rotationSpeed: 300
   visionRange: 10.6
   viewConeAngle: 40
   viewCone: {fileID: 1915602787148597573}
+  pursuingMaxTime: 5
+  shootingMaxTime: 2
+  VIEWCONE_COLOR_PATROL: {r: 0, g: 1, b: 0, a: 1}
+  VIEWCONE_COLOR_WARNING: {r: 1, g: 0.7433608, b: 0.015686274, a: 1}
+  VIEWCONE_COLOR_DANGER: {r: 1, g: 0, b: 0, a: 1}
   state: 0
 --- !u!114 &1968132592
 MonoBehaviour:
@@ -222,7 +226,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3c84e5a71eaa754a825be6f6533f6f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshAgent: {fileID: 1968132589}
   waypoints:
   - {fileID: 0}
   - {fileID: 0}

@@ -6,22 +6,42 @@ using UnityEngine.AI;
 public class WaypointPatrol : MonoBehaviour
 {
 
-    [SerializeField] private NavMeshAgent navMeshAgent;
+    private NavMeshAgent navMeshAgent;
     [SerializeField] private Transform[] waypoints;
 
-    int m_CurrentWaypointIndex;
+    private int _currentWaypointIndex;
+
+    public bool IsPatrolling { get; set; }
+
+    private void Awake()
+    {
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
     void Start()
     {
-        Patrol();
+        if (CheckWaypointsExistance())
+        {
+            navMeshAgent.SetDestination(waypoints[0].position);
+        }
     }
 
     void Update()
     {
-        if (CheckWaypointsExistance() && navMeshAgent.remainingDistance < navMeshAgent.stoppingDistance) {
-            m_CurrentWaypointIndex = (m_CurrentWaypointIndex + 1) % waypoints.Length;
-            navMeshAgent.SetDestination(waypoints[m_CurrentWaypointIndex].position);
+        Patrol();
+    }
+
+
+    public void Patrol()
+    {
+        if (IsPatrolling && CheckWaypointsExistance() && navMeshAgent.remainingDistance < navMeshAgent.stoppingDistance) {
+            _currentWaypointIndex = (_currentWaypointIndex + 1) % waypoints.Length;
+            navMeshAgent.SetDestination(waypoints[_currentWaypointIndex].position);
         }
-        
+    }
+
+    private bool CheckWaypointsExistance()
+    {
+        return waypoints != null && waypoints.Length > 0 && waypoints[0] != null && navMeshAgent != null;
     }
 
     private void OnDrawGizmos()
@@ -38,19 +58,12 @@ public class WaypointPatrol : MonoBehaviour
                 previousPosition = waypoint.position;
             }
             Gizmos.DrawLine(previousPosition, startPosition);
-        }
-    }
 
-    void Patrol()
-    {
-        if (CheckWaypointsExistance())
-        {
-            navMeshAgent.SetDestination(waypoints[0].position);
+            if(navMeshAgent != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(navMeshAgent.destination, 0.25f);
+            }
         }
-    }
-
-    private bool CheckWaypointsExistance()
-    {
-        return waypoints != null && waypoints.Length > 0 && waypoints[0] != null;
     }
 }
