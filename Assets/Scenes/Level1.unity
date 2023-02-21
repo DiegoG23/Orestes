@@ -2408,14 +2408,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec8d0642be987b4a88c3f8a5528503f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _players:
-  - {fileID: 1999474921}
+  m_players:
   - {fileID: 1736469694}
+  - {fileID: 1999474921}
   _camera: {fileID: 1907122814}
-  _switchPlayerKeyCode: 9
-  _saveLevelKeyCode: 115
-  _loadLevelKeyCode: 108
-  _restartLevelKeyCode: 114
+  m_switchPlayerKeyCode: 9
+  m_saveLevelKeyCode: 115
+  m_loadLevelKeyCode: 108
+  m_restartLevelKeyCode: 114
+  difficultyLevel: 0
   dontDestroyOnLoad: 1
 --- !u!1 &1705653637
 GameObject:

@@ -51,6 +51,7 @@ public abstract class Player : Character
         _animator.SetBool("isDead", _isDead);
         _agent.enabled = false;
         GameManager.instance.LoseLevel();
+        GameManager.instance.RemovePlayer(this);
     }
 
 

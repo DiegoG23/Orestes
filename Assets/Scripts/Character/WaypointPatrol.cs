@@ -7,7 +7,7 @@ public class WaypointPatrol : MonoBehaviour
 {
 
     private NavMeshAgent navMeshAgent;
-    [SerializeField] private Transform[] waypoints;
+    [SerializeField] private List<Transform> waypoints;
 
     private int _currentWaypointIndex;
 
@@ -19,6 +19,10 @@ public class WaypointPatrol : MonoBehaviour
     }
     void Start()
     {
+        if (GameManager.instance.DifficultyLevel == DifficultyLevel.HARCORE)
+        {
+            waypoints.Reverse();
+        }
         if (CheckWaypointsExistance())
         {
             navMeshAgent.SetDestination(waypoints[0].position);
@@ -34,14 +38,14 @@ public class WaypointPatrol : MonoBehaviour
     public void Patrol()
     {
         if (IsPatrolling && CheckWaypointsExistance() && navMeshAgent.remainingDistance < navMeshAgent.stoppingDistance) {
-            _currentWaypointIndex = (_currentWaypointIndex + 1) % waypoints.Length;
+            _currentWaypointIndex = (_currentWaypointIndex + 1) % waypoints.Count;
             navMeshAgent.SetDestination(waypoints[_currentWaypointIndex].position);
         }
     }
 
     private bool CheckWaypointsExistance()
     {
-        return waypoints != null && waypoints.Length > 0 && waypoints[0] != null && navMeshAgent != null;
+        return waypoints != null && waypoints.Count > 0 && waypoints[0] != null && navMeshAgent != null;
     }
 
     private void OnDrawGizmos()

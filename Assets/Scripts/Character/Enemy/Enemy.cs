@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,6 +26,8 @@ public abstract class Enemy : Character
     private float _currentPursuingTime = 0f;
     private float _currentShootingTime = 0f;
 
+    private static Dictionary<GameObject, bool> enemiesDisabled = new Dictionary<GameObject, bool>();
+
 
 
     public bool PlayerOnSight { get; protected set; } = false;
@@ -37,6 +40,7 @@ public abstract class Enemy : Character
     {
         base.Awake();
         _waypointPatrol = GetComponent<WaypointPatrol>();
+        enemiesDisabled.Add(gameObject, false);
     }
     protected override void Start()
     {
@@ -182,6 +186,7 @@ public abstract class Enemy : Character
     public virtual void Disable()
     {
         Debug.Log("Enemy Disabled");
+        enemiesDisabled[gameObject] = true;
 
         _waypointPatrol.IsPatrolling = false;
         _agent.enabled = false;
@@ -192,6 +197,19 @@ public abstract class Enemy : Character
 
         _animator.SetBool("isDisabled", true);
 
+    }
+
+
+    public static bool AllEnemiesDisabled()
+    {
+        foreach (bool disabled in enemiesDisabled.Values)
+        {
+            if (!disabled)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
 

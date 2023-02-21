@@ -5,36 +5,50 @@ using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Player[] _players;
+    [SerializeField] private Player[] m_players;
     [SerializeField] private CinemachineVirtualCamera _camera;
 
-    [SerializeField] private KeyCode _switchPlayerKeyCode = KeyCode.Tab;
-    [SerializeField] private KeyCode _saveLevelKeyCode = KeyCode.S;
-    [SerializeField] private KeyCode _loadLevelKeyCode = KeyCode.L;
-    [SerializeField] private KeyCode _restartLevelKeyCode = KeyCode.R;
+    [SerializeField] private KeyCode m_switchPlayerKeyCode = KeyCode.Tab;
+    [SerializeField] private KeyCode m_saveLevelKeyCode = KeyCode.S;
+    [SerializeField] private KeyCode m_loadLevelKeyCode = KeyCode.L;
+    [SerializeField] private KeyCode m_restartLevelKeyCode = KeyCode.R;
+    [SerializeField] private DifficultyLevel difficultyLevel = DifficultyLevel.HARCORE;
 
 
-    private int _selectedPlayerIndex = 0;
 
+    private int m_selectedPlayerIndex = 0;
 
     public static GameManager instance;
     public bool dontDestroyOnLoad;
 
     public Player SelectedPlayer
     {
-        get => _players[_selectedPlayerIndex];
-        private set => SetSelectedPlayer(value); //TODO Borrar si no se llama de afuera, usar el field
+        get => m_players[m_selectedPlayerIndex];
+        private set => SetSelectedPlayer(value);
+    }
+    public DifficultyLevel DifficultyLevel { get => difficultyLevel; private set => difficultyLevel = value; }
+
+    private void SetSelectedPlayer(Player l_player)
+    {
+        for (int i = 0; i < m_players.Length; i++)
+        {
+            if (m_players[i] == l_player)
+            {
+                m_selectedPlayerIndex = i;
+                _camera.Follow = l_player.transform;
+                return;
+            }
+        }
     }
 
-    private void SetSelectedPlayer(Player value)
+    public void RemovePlayer(Player l_player)
     {
-        var player = value;
-        for (int i = 0; i < _players.Length; i++)
+        for (int i = m_players.Length - 1; i >= 0; i--)
         {
-            if (_players[i] == player)
+            if (m_players[i] == l_player)
             {
-                _selectedPlayerIndex = i;
-                _camera.Follow = player.transform;
+                m_selectedPlayerIndex = i;
+                _camera.Follow = l_player.transform;
                 return;
             }
         }
@@ -59,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetSelectedPlayer(_players[_selectedPlayerIndex]);
+        SetSelectedPlayer(m_players[m_selectedPlayerIndex]);
     }
 
     private void Update()
@@ -72,15 +86,15 @@ public class GameManager : MonoBehaviour
     private void LevelLoadHandler()
     {
 
-        if (Input.GetKeyDown(_saveLevelKeyCode))
+        if (Input.GetKeyDown(m_saveLevelKeyCode))
         {
             SaveLevel();
         }
-        else if (Input.GetKeyDown(_loadLevelKeyCode))
+        else if (Input.GetKeyDown(m_loadLevelKeyCode))
         {
             LoadLevel();
         }
-        else if (Input.GetKeyDown(_restartLevelKeyCode))
+        else if (Input.GetKeyDown(m_restartLevelKeyCode))
         {
             RestartLevel();
         }
@@ -103,10 +117,10 @@ public class GameManager : MonoBehaviour
 
     private void SwitchPlayerHandler()
     {
-        if (Input.GetKeyDown(_switchPlayerKeyCode))
+        if (Input.GetKeyDown(m_switchPlayerKeyCode))
         {
-            _selectedPlayerIndex = (_selectedPlayerIndex + 1) % _players.Length;
-            SetSelectedPlayer(_players[_selectedPlayerIndex]);
+            m_selectedPlayerIndex = (m_selectedPlayerIndex + 1) % m_players.Length;
+            SetSelectedPlayer(m_players[m_selectedPlayerIndex]);
         }
     }
 
@@ -122,6 +136,10 @@ public class GameManager : MonoBehaviour
     public void WinLevel()
     {
         Debug.Log("YOU WIN!!!!");
+        if (Enemy.AllEnemiesDisabled())
+        {
+            Debug.Log("YOU DISABLED ALL ENEMIES!!!!");
+        }
     }
 
     public void LoseLevel()

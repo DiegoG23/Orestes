@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
-    [SerializeField] private PickupType pickupType;
-    [SerializeField] protected Player[] playersAbleToPickup;
-    private List<Player> playersGoingToPickup = new List<Player>();
+    [SerializeField] private PickupType m_pickupType;
+    [SerializeField] protected Player[] m_playersAbleToPickup;
+    private List<Player> m_playersGoingToPickup = new List<Player>();
 
 
     // Start is called before the first frame update
@@ -23,14 +23,24 @@ public class Pickup : MonoBehaviour
 
     public bool IsPlayerAbleToPickup()
     {
-        var _playerType = GameManager.instance.SelectedPlayer.GetType();
-        foreach (Player player in playersAbleToPickup)
+        var l_playerType = GameManager.instance.SelectedPlayer.GetType();
+        foreach (Player player in m_playersAbleToPickup)
         {
-            if (player.GetType() == _playerType) //player found
+            if (player.GetType() == l_playerType) //player found
             {
                 return true;
             }
         }
         return false;
+    }
+
+    public void PlayerGoingToPickup(Player l_player)
+    {
+        m_playersGoingToPickup.Add(l_player);
+    }
+
+    public void PickedupByPlayer(Player l_player)
+    {
+        m_playersGoingToPickup.Remove(l_player);
     }
 }
