@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3815888047148569626}
   - component: {fileID: 6416540286337579715}
   - component: {fileID: 3411418385748254384}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wall Corridor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1892847821666117102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 78, y: 9, z: -6.1}
-  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_LocalScale: {x: 1, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -52,7 +52,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892847821666117102}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 2
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -98,8 +98,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.400003, y: 4.478507, z: 6.000289}
-  m_Center: {x: 0.049996123, y: 6.7607503, z: 2.9999905}
+  m_Size: {x: 0.30650073, y: 4.458338, z: 6.0132713}
+  m_Center: {x: 0.0017496496, y: 6.7756166, z: 2.9999998}
 --- !u!65 &6416540286337579715
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -111,8 +111,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.400003, y: 4.5195036, z: 0.50754213}
-  m_Center: {x: 0.049996123, y: 2.258944, z: 5.7463636}
+  m_Size: {x: 0.30248946, y: 4.546448, z: 0.8561714}
+  m_Center: {x: 0.0012432381, y: 2.273224, z: 5.5785623}
 --- !u!65 &3411418385748254384
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -124,5 +124,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.400003, y: 4.5169563, z: 0.8171425}
-  m_Center: {x: 0.049996123, y: 2.2576704, z: 0.40841722}
+  m_Size: {x: 0.2992378, y: 4.543498, z: 0.8569562}
+  m_Center: {x: -0.00038649584, y: 2.2709413, z: 0.42168754}

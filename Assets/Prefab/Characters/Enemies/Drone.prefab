@@ -206,7 +206,7 @@ MonoBehaviour:
   damage: 1
   rotationSpeed: 300
   visionRange: 10.6
-  viewConeAngle: 40
+  viewConeAngle: 80
   viewCone: {fileID: 1915602787148597573}
   pursuingMaxTime: 5
   shootingMaxTime: 2
@@ -240,7 +240,7 @@ Rigidbody:
   m_GameObject: {fileID: 656103466611943740}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 100
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -391,7 +391,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2753
+    m_Bits: 705
   m_RenderingLayerMask: 1
   m_Lightmapping: 1
   m_LightShadowCasterMode: 0

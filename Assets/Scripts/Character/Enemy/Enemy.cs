@@ -41,7 +41,7 @@ public abstract class Enemy : Character
     protected override void Start()
     {
         base.Start();
-        _player = GameManager.instance.Player;
+        _player = GameManager.instance.SelectedPlayer;
     }
 
 
@@ -62,20 +62,12 @@ public abstract class Enemy : Character
         Vector3 playerPosition = _player.transform.position;
         Vector3 vectorToPlayer = (playerPosition - transform.position).normalized;
 
-        if (Vector3.Distance(transform.position, playerPosition) <= visionRange)
-        {
-            Debug.Log("IN RANGEE!!!");
-        }
-        if (Vector3.Angle(transform.forward, vectorToPlayer) <= viewConeAngle)
-        {
-            Debug.Log("IN ANGLE!!!");
-        }
-        //player inside viewcone
+        //player inside viewcone (from viewcone light perspective)
         if (Vector3.Distance(transform.position, playerPosition) <= visionRange && Vector3.Angle(transform.forward, vectorToPlayer) <= viewConeAngle/2f)
         {
 
             LayerMask layerMask = LayerMask.GetMask("Obstacles");
-            //player at sight
+            //player at sight (from enemy view perspective)
             if (!Physics.Raycast(transform.position, vectorToPlayer, visionRange, layerMask))
             {
                 _playerLastPosition = playerPosition;
@@ -83,36 +75,6 @@ public abstract class Enemy : Character
             }
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        if (_player)
-        {
-            if (Vector3.Distance(transform.position, _player.transform.position) <= visionRange)
-            {
-
-                Vector3 vToPlayer = (_player.transform.position - transform.position).normalized;
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(_player.transform.position, 0.25f);
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(transform.forward, 0.25f);
-                //Gizmos.color = Color.magenta;
-                //Gizmos.DrawSphere(transform.position, 0.25f);
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(vToPlayer, 0.25f);
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawLine(Vector3.zero, transform.forward);
-                Gizmos.DrawLine(Vector3.zero, vToPlayer);
-                Gizmos.color = Color.red;
-                var rotation = Quaternion.AngleAxis(viewConeAngle/2f, Vector3.up);
-                var forward = Vector3.forward;
-                var right = rotation * forward;
-                Gizmos.DrawLine(Vector3.zero, right);
-
-            }
-        }
-    }
-
 
     private void HandleState()
     {
@@ -158,7 +120,7 @@ public abstract class Enemy : Character
 
     private void Pursuit()
     {
-        Debug.Log("Pursuing for " + (pursuingMaxTime - _currentPursuingTime) + " seconds");
+        Debug.Log("Pursuing player " + GameManager.instance.SelectedPlayer.GetType() + ".");
         if (PlayerOnSight)
         {
             state = EnemyState.SHOOTING;
@@ -221,6 +183,7 @@ public abstract class Enemy : Character
     {
         Debug.Log("Enemy Disabled");
 
+        _waypointPatrol.IsPatrolling = false;
         _agent.enabled = false;
 
         state = EnemyState.DISABLED;

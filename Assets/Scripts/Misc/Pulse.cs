@@ -5,8 +5,8 @@ using UnityEngine;
 public class Pulse : MonoBehaviour
 {
     [SerializeField] private float lifetime = 5.0f;
-    [SerializeField] private float explosionforce = 0.5f;
-    [SerializeField] private float explosionradius = 5.0f;
+    [SerializeField] private float explosionforce = 0.25f;
+    [SerializeField] private float explosionradius = 0.25f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +42,7 @@ public class Pulse : MonoBehaviour
             {
                 enemy.Disable();
                 Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
-                //enemyRigidbody.AddExplosionForce(explosionforce, transform.position, explosionradius);
+                enemyRigidbody.AddExplosionForce(explosionforce, transform.position, explosionradius);
             }
         }
     }
