@@ -5,41 +5,16 @@ using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Player[] _players;
-    [SerializeField] private CinemachineVirtualCamera _camera;
-
-    [SerializeField] private KeyCode _switchPlayerKeyCode = KeyCode.Tab;
-    [SerializeField] private KeyCode _saveLevelKeyCode = KeyCode.S;
-    [SerializeField] private KeyCode _loadLevelKeyCode = KeyCode.L;
-    [SerializeField] private KeyCode _restartLevelKeyCode = KeyCode.R;
-
-
-    private int _selectedPlayerIndex = 0;
+    [SerializeField] private Player[] m_players;
+    [SerializeField] private Enemy[] m_enemies;
+    [SerializeField] private CinemachineVirtualCamera m_camera;
 
 
     public static GameManager instance;
     public bool dontDestroyOnLoad;
 
-    public Player SelectedPlayer
-    {
-        get => _players[_selectedPlayerIndex];
-        private set => SetSelectedPlayer(value); //TODO Borrar si no se llama de afuera, usar el field
-    }
-
-    private void SetSelectedPlayer(Player value)
-    {
-        var player = value;
-        for (int i = 0; i < _players.Length; i++)
-        {
-            if (_players[i] == player)
-            {
-                _selectedPlayerIndex = i;
-                _camera.Follow = player.transform;
-                return;
-            }
-        }
-    }
-
+    public Player[] Players { get => m_players; }
+    public CinemachineVirtualCamera Camera { get => m_camera; }
 
     private void Awake()
     {
@@ -59,65 +34,32 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SetSelectedPlayer(_players[_selectedPlayerIndex]);
+        
     }
 
     private void Update()
     {
-        LevelLoadHandler();
-        SwitchPlayerHandler();
-        ClickHandler();
+
     }
 
-    private void LevelLoadHandler()
-    {
 
-        if (Input.GetKeyDown(_saveLevelKeyCode))
-        {
-            SaveLevel();
-        }
-        else if (Input.GetKeyDown(_loadLevelKeyCode))
-        {
-            LoadLevel();
-        }
-        else if (Input.GetKeyDown(_restartLevelKeyCode))
-        {
-            RestartLevel();
-        }
-    }
 
-    private void RestartLevel()
+    public void RestartLevel()
     {
         throw new NotImplementedException();
     }
 
-    private void LoadLevel()
+    public void LoadLevel()
     {
         throw new NotImplementedException();
     }
 
-    private void SaveLevel()
+    public void SaveLevel()
     {
         throw new NotImplementedException();
     }
 
-    private void SwitchPlayerHandler()
-    {
-        if (Input.GetKeyDown(_switchPlayerKeyCode))
-        {
-            _selectedPlayerIndex = (_selectedPlayerIndex + 1) % _players.Length;
-            SetSelectedPlayer(_players[_selectedPlayerIndex]);
-        }
-    }
 
-    public void ClickHandler()
-    {
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            SelectedPlayer.MoveToClickPoint();
-        }
-    }
 
     public void WinLevel()
     {

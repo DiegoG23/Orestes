@@ -1,36 +1,25 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickup : MonoBehaviour
+public abstract class Pickup : MonoBehaviour
 {
-    [SerializeField] private PickupType pickupType;
-    [SerializeField] protected Player[] playersAbleToPickup;
-    private List<Player> playersGoingToPickup = new List<Player>();
+    [SerializeField] protected int m_charges = 1;
 
+    protected string m_pickupName;
 
-    // Start is called before the first frame update
-    void Start()
+    public int Charges { get => m_charges; protected set => m_charges = value; }
+
+    protected void OnTriggerEnter(Collider collider)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public bool IsPlayerAbleToPickup()
-    {
-        var _playerType = GameManager.instance.SelectedPlayer.GetType();
-        foreach (Player player in playersAbleToPickup)
+        GameObject other = collider.gameObject;
+        if (other != null
+            && other.CompareTag("Player")
+            && other.TryGetComponent<Player>(out var player)
+            && player.CanPickup(this))
         {
-            if (player.GetType() == _playerType) //player found
-            {
-                return true;
-            }
+            player.Pickup(this);
+            Destroy(gameObject);   
         }
-        return false;
     }
+
 }

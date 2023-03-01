@@ -4,13 +4,13 @@ using UnityEngine.AI;
 
 public abstract class Enemy : Character
 {
-    [SerializeField] protected float rotationSpeed = 10.0f;
-    [SerializeField] protected float visionRange = 10.6f;
-    [Range(0,360)]
-    [SerializeField] protected float viewConeAngle = 80.0f;
-    [SerializeField] protected Light viewCone;
-    [SerializeField] protected float pursuingMaxTime = 5.0f;
-    [SerializeField] protected float shootingMaxTime = 2.0f;
+    [SerializeField] protected float m_rotationSpeed = 10.0f;
+    [SerializeField] protected float m_visionRange = 10.6f;
+    [Range(0, 360)]
+    [SerializeField] protected float m_viewConeAngle = 80.0f;
+    [SerializeField] protected Light m_viewCone;
+    [SerializeField] protected float m_pursuingMaxTime = 5.0f;
+    [SerializeField] protected float m_shootingMaxTime = 2.0f;
 
     [SerializeField] protected Color VIEWCONE_COLOR_PATROL = Color.green;
     [SerializeField] protected Color VIEWCONE_COLOR_WARNING = Color.yellow;
@@ -18,30 +18,25 @@ public abstract class Enemy : Character
 
     [SerializeField] protected EnemyState state = EnemyState.PATROL;
 
-    protected WaypointPatrol _waypointPatrol;
-    protected Player _player;
+    protected WaypointPatrol m_waypointPatrol;
 
-    private Vector3 _playerLastPosition;
-    private float _currentPursuingTime = 0f;
-    private float _currentShootingTime = 0f;
-
+    private Vector3 m_targetLastPosition;
+    private float m_currentPursuingTime = 0f;
+    private float m_currentShootingTime = 0f;
 
 
-    public bool PlayerOnSight { get; protected set; } = false;
+
+    public Player PlayerAtSight { get; protected set; } = null;
     public bool IsAlert { get; protected set; } = false;
 
-    public float VisionRange { get => visionRange; set => visionRange = value; }
-    public float ViewConeAngle { get => viewConeAngle; set => viewConeAngle = value; }
+    public float VisionRange { get => m_visionRange; set => m_visionRange = value; }
+    public float ViewConeAngle { get => m_viewConeAngle; set => m_viewConeAngle = value; }
+    protected Player[] Players { get => GameManager.instance.Players; }
 
     protected override void Awake()
     {
         base.Awake();
-        _waypointPatrol = GetComponent<WaypointPatrol>();
-    }
-    protected override void Start()
-    {
-        base.Start();
-        _player = GameManager.instance.SelectedPlayer;
+        m_waypointPatrol = GetComponent<WaypointPatrol>();
     }
 
 
@@ -53,25 +48,32 @@ public abstract class Enemy : Character
 
     private void CheckViewcone()
     {
-        PlayerOnSight = false;
-        if (_player == null || _player.IsDead)
+        PlayerAtSight = null;
+        foreach (Player player in Players)
         {
-            return;
-        }
-
-        Vector3 playerPosition = _player.transform.position;
-        Vector3 vectorToPlayer = (playerPosition - transform.position).normalized;
-
-        //player inside viewcone (from viewcone light perspective)
-        if (Vector3.Distance(transform.position, playerPosition) <= visionRange && Vector3.Angle(transform.forward, vectorToPlayer) <= viewConeAngle/2f)
-        {
-
-            LayerMask layerMask = LayerMask.GetMask("Obstacles");
-            //player at sight (from enemy view perspective)
-            if (!Physics.Raycast(transform.position, vectorToPlayer, visionRange, layerMask))
+            if (player == null || player.IsDead)
             {
-                _playerLastPosition = playerPosition;
-                PlayerOnSight = true;
+                break;
+            }
+
+            Vector3 l_playerPosition = player.transform.position;
+            Vector3 l_vectorToPlayer = (l_playerPosition - transform.position).normalized;
+            Vector3 l_viewConeVectorToPlayer = (l_playerPosition - transform.position).normalized;
+
+            //player inside viewcone (from viewcone light perspective)
+            if (Vector3.Distance(m_viewCone.transform.position, l_playerPosition) <= m_visionRange && Vector3.Angle(transform.forward, l_viewConeVectorToPlayer) <= m_viewConeAngle / 2f)
+            {
+
+                LayerMask layerMask = LayerMask.GetMask("Obstacles");
+                //player at sight (from enemy view perspective), there's no obstacle between enemy and player
+                if (!Physics.Raycast(transform.position, l_vectorToPlayer, m_visionRange, layerMask))
+                {
+                    if(PlayerAtSight == null)
+                    {
+                        m_targetLastPosition = l_playerPosition;
+                        PlayerAtSight = player;
+                    }
+                }
             }
         }
     }
@@ -107,10 +109,10 @@ public abstract class Enemy : Character
             return;
         }
 
-        _waypointPatrol.IsPatrolling = false;
+        m_waypointPatrol.IsPatrolling = false;
         StopAgentOnPlace();
 
-        viewCone.color = VIEWCONE_COLOR_WARNING;
+        m_viewCone.color = VIEWCONE_COLOR_WARNING;
 
         _animator.SetBool("isAttacking", false);
         _animator.SetBool("isAlert", true);
@@ -120,22 +122,22 @@ public abstract class Enemy : Character
 
     private void Pursuit()
     {
-        Debug.Log("Pursuing player " + GameManager.instance.SelectedPlayer.GetType() + ".");
-        if (PlayerOnSight)
+        if (PlayerAtSight != null)
         {
+            Debug.Log("Pursuing player " + PlayerAtSight.GetType() + ".");
             state = EnemyState.SHOOTING;
             return;
         }
-        if (_currentPursuingTime >= pursuingMaxTime)
+        if (m_currentPursuingTime >= m_pursuingMaxTime)
         {
             state = EnemyState.PATROL;
-            _currentPursuingTime = 0;
+            m_currentPursuingTime = 0;
             return;
         }
-        _agent.SetDestination(_playerLastPosition);
-        _currentPursuingTime += Time.deltaTime;
+        _agent.SetDestination(m_targetLastPosition);
+        m_currentPursuingTime += Time.deltaTime;
 
-        viewCone.color = VIEWCONE_COLOR_DANGER;
+        m_viewCone.color = VIEWCONE_COLOR_DANGER;
 
         _animator.SetBool("isAttacking", false);
         _animator.SetBool("isAlert", true);
@@ -146,35 +148,34 @@ public abstract class Enemy : Character
 
     private void Patrol()
     {
-        Debug.Log("Patrolling");
-        if (PlayerOnSight)
+        if (PlayerAtSight != null)
         {
             state = EnemyState.ALERT;
             return;
         }
-        viewCone.color = VIEWCONE_COLOR_PATROL;
+        m_viewCone.color = VIEWCONE_COLOR_PATROL;
 
         _animator.SetBool("isAttacking", false);
         _animator.SetBool("isAlert", false);
 
-        _waypointPatrol.IsPatrolling = true;
+        m_waypointPatrol.IsPatrolling = true;
     }
 
 
     private void Shoot()
     {
         Debug.Log("Shooting Player");
-        if (_player.IsDead)
+        if (PlayerAtSight == null || PlayerAtSight.IsDead)
         {
-            _currentShootingTime += Time.deltaTime;
-            if (_currentShootingTime > shootingMaxTime)
+            m_currentShootingTime += Time.deltaTime;
+            if (m_currentShootingTime > m_shootingMaxTime)
             {
                 state = EnemyState.PATROL;
             }
             return;
         }
         StopAgentOnPlace();
-        _player.Die();
+        PlayerAtSight.Die();
 
         _animator.SetBool("isAttacking", true);
     }
@@ -183,12 +184,12 @@ public abstract class Enemy : Character
     {
         Debug.Log("Enemy Disabled");
 
-        _waypointPatrol.IsPatrolling = false;
+        m_waypointPatrol.IsPatrolling = false;
         _agent.enabled = false;
 
         state = EnemyState.DISABLED;
 
-        viewCone.gameObject.SetActive(false);
+        m_viewCone.gameObject.SetActive(false);
 
         _animator.SetBool("isDisabled", true);
 

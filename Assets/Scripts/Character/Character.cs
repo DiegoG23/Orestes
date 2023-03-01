@@ -21,6 +21,9 @@ public abstract class Character : MonoBehaviour
 
     protected void StopAgentOnPlace()
     {
-        _agent.destination = _agent.transform.position;
+        if (_agent.enabled)
+        {
+            _agent.destination = _agent.transform.position;
+        }
     }
 }

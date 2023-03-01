@@ -5,10 +5,10 @@ using UnityEngine.AI;
 
 public class Waypoint
 {
+    [SerializeField] private bool isRest;
+    [SerializeField] private Vector3 direction;
+    
+    public bool IsRest { get => isRest; set => isRest = value; }
+    public Vector3 Direction { get => direction; set => direction = value; }
 
-    [SerializeField] private Vector3 waypointPosition;
-    [SerializeField] private bool hasRest;
-
-    public Vector3 WaypointPosition { get => waypointPosition; set => waypointPosition = value; }
-    public bool HasRest { get => hasRest; set => hasRest = value; }
 }

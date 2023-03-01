@@ -4,36 +4,67 @@ using UnityEngine;
 
 public class Electra : Player
 {
-    //KeyCodes
-    [SerializeField] private KeyCode pulseKeyCode = KeyCode.D;
-
     //Cooldowns
-    [SerializeField] private float pulseCooldown = 5f;
+    [SerializeField] private float zapperCooldown = 5f;
+
+    [SerializeField] protected int m_initialZapperCoreCharges = 1;
 
     //Prefabs
-    [SerializeField] private GameObject pulsePrefab;
+    [SerializeField] private Zapper zapperPrefab;
 
-    private float _pulseCooldownEndTime = 0;
+    private float _zapperCooldownEndTime = 0;
+    private int m_zapperCoreCharges = 0;
 
+    public int ZapperCoreCharges { get => m_zapperCoreCharges; }
 
-
-    // Update is called once per frame
-    protected override void Update()
+    protected override void Start()
     {
-        base.Update();
-        PulseHandler();
+        base.Start();
+        m_zapperCoreCharges = m_initialZapperCoreCharges;
     }
 
 
-
-    private void PulseHandler()
+    // ABILITIES
+    private void TriggerZapper()
     {
-        if (Input.GetKeyDown(pulseKeyCode) && _pulseCooldownEndTime <= Time.time)
+        if(m_zapperCoreCharges > 0 && _zapperCooldownEndTime <= Time.time)
         {
-            _pulseCooldownEndTime = Time.time + pulseCooldown;
+            m_zapperCoreCharges--;
+            _zapperCooldownEndTime = Time.time + zapperCooldown;
             StopAgentOnPlace();
-            GameObject pulse = Instantiate(pulsePrefab, transform.position, Quaternion.identity, _animator.transform);
-            Destroy(pulse, pulseCooldown);
+            Instantiate(zapperPrefab, transform.position, Quaternion.identity, transform);
         }
+    }
+
+
+    // PICKUPS
+    public override bool CanPickup(Pickup p_pickup)
+    {
+        return base.CanPickup(p_pickup) || p_pickup is ZapperCorePickup;
+    }
+
+    public override void Pickup(Pickup pickup)
+    {
+        base.Pickup(pickup);
+        if (pickup is ZapperCorePickup)
+        {
+            m_zapperCoreCharges += pickup.Charges;
+            return;
+        }
+    }
+
+    public override void TriggerAbilityOne()
+    {
+        TriggerZapper();
+    }
+
+    public override void TriggerAbilityTwo()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void TriggerAbilityThree()
+    {
+        throw new System.NotImplementedException();
     }
 }
