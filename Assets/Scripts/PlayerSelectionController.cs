@@ -79,7 +79,7 @@ public class PlayerSelectionController : MonoBehaviour
         return null;
     }
 
-    private void SelectPlayer(int p_playerIndex)
+    public void SelectPlayer(int p_playerIndex)
     {
         if (p_playerIndex < 0 || p_playerIndex >= m_gameManager.Players.Length)
         {
