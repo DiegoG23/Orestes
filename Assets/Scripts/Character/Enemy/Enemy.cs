@@ -4,17 +4,21 @@ using UnityEngine.AI;
 
 public abstract class Enemy : Character
 {
+    [SerializeField] protected EnemyData enemyData;
+    /*
     [SerializeField] protected float m_rotationSpeed = 10.0f;
     [SerializeField] protected float m_visionRange = 10.6f;
     [Range(0, 360)]
     [SerializeField] protected float m_viewConeAngle = 80.0f;
-    [SerializeField] protected Light m_viewCone;
     [SerializeField] protected float m_pursuingMaxTime = 5.0f;
     [SerializeField] protected float m_shootingMaxTime = 2.0f;
 
     [SerializeField] protected Color VIEWCONE_COLOR_PATROL = Color.green;
     [SerializeField] protected Color VIEWCONE_COLOR_WARNING = Color.yellow;
     [SerializeField] protected Color VIEWCONE_COLOR_DANGER = Color.red;
+    */
+
+    [SerializeField] protected Light m_viewCone;
 
     [SerializeField] protected EnemyState state = EnemyState.PATROL;
 
@@ -29,9 +33,9 @@ public abstract class Enemy : Character
     public Player PlayerAtSight { get; protected set; } = null;
     public bool IsAlert { get; protected set; } = false;
 
-    public float VisionRange { get => m_visionRange; set => m_visionRange = value; }
-    public float ViewConeAngle { get => m_viewConeAngle; set => m_viewConeAngle = value; }
-    protected Player[] Players { get => GameManager.instance.Players; }
+    public float VisionRange { get => enemyData.m_visionRange; set => enemyData.m_visionRange = value; }
+    public float ViewConeAngle { get => enemyData.m_viewConeAngle; set => enemyData.m_viewConeAngle = value; }
+    protected Player[] Players { get => LevelController.instance.Players; }
 
     protected override void Awake()
     {
@@ -61,12 +65,12 @@ public abstract class Enemy : Character
             Vector3 l_viewConeVectorToPlayer = (l_playerPosition - transform.position).normalized;
 
             //player inside viewcone (from viewcone light perspective)
-            if (Vector3.Distance(m_viewCone.transform.position, l_playerPosition) <= m_visionRange && Vector3.Angle(transform.forward, l_viewConeVectorToPlayer) <= m_viewConeAngle / 2f)
+            if (Vector3.Distance(m_viewCone.transform.position, l_playerPosition) <= enemyData.m_visionRange && Vector3.Angle(transform.forward, l_viewConeVectorToPlayer) <= enemyData.m_viewConeAngle / 2f)
             {
 
                 LayerMask layerMask = LayerMask.GetMask("Obstacles");
                 //player at sight (from enemy view perspective), there's no obstacle between enemy and player
-                if (!Physics.Raycast(transform.position, l_vectorToPlayer, m_visionRange, layerMask))
+                if (!Physics.Raycast(transform.position, l_vectorToPlayer, enemyData.m_visionRange, layerMask))
                 {
                     if(PlayerAtSight == null)
                     {
@@ -112,7 +116,7 @@ public abstract class Enemy : Character
         m_waypointPatrol.IsPatrolling = false;
         StopAgentOnPlace();
 
-        m_viewCone.color = VIEWCONE_COLOR_WARNING;
+        m_viewCone.color = enemyData.VIEWCONE_COLOR_WARNING;
 
         _animator.SetBool("isAttacking", false);
         _animator.SetBool("isAlert", true);
@@ -128,7 +132,7 @@ public abstract class Enemy : Character
             state = EnemyState.SHOOTING;
             return;
         }
-        if (m_currentPursuingTime >= m_pursuingMaxTime)
+        if (m_currentPursuingTime >= enemyData.m_pursuingMaxTime)
         {
             state = EnemyState.PATROL;
             m_currentPursuingTime = 0;
@@ -137,7 +141,7 @@ public abstract class Enemy : Character
         _agent.SetDestination(m_targetLastPosition);
         m_currentPursuingTime += Time.deltaTime;
 
-        m_viewCone.color = VIEWCONE_COLOR_DANGER;
+        m_viewCone.color = enemyData.VIEWCONE_COLOR_DANGER;
 
         _animator.SetBool("isAttacking", false);
         _animator.SetBool("isAlert", true);
@@ -153,7 +157,7 @@ public abstract class Enemy : Character
             state = EnemyState.ALERT;
             return;
         }
-        m_viewCone.color = VIEWCONE_COLOR_PATROL;
+        m_viewCone.color = enemyData.VIEWCONE_COLOR_PATROL;
 
         _animator.SetBool("isAttacking", false);
         _animator.SetBool("isAlert", false);
@@ -168,7 +172,7 @@ public abstract class Enemy : Character
         if (PlayerAtSight == null || PlayerAtSight.IsDead)
         {
             m_currentShootingTime += Time.deltaTime;
-            if (m_currentShootingTime > m_shootingMaxTime)
+            if (m_currentShootingTime > enemyData.m_shootingMaxTime)
             {
                 state = EnemyState.PATROL;
             }

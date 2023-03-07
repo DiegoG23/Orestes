@@ -204,15 +204,8 @@ MonoBehaviour:
   speed: 4
   health: 100
   damage: 1
-  m_rotationSpeed: 10
-  m_visionRange: 10.6
-  m_viewConeAngle: 80
+  enemyData: {fileID: 11400000, guid: c3c56015bc5bbe34c842f2f8ba8a12bf, type: 2}
   m_viewCone: {fileID: 1915602787148597573}
-  m_pursuingMaxTime: 5
-  m_shootingMaxTime: 2
-  VIEWCONE_COLOR_PATROL: {r: 0, g: 1, b: 0, a: 1}
-  VIEWCONE_COLOR_WARNING: {r: 1, g: 0.7433608, b: 0.015686274, a: 1}
-  VIEWCONE_COLOR_DANGER: {r: 1, g: 0, b: 0, a: 1}
   state: 0
 --- !u!114 &1968132592
 MonoBehaviour:

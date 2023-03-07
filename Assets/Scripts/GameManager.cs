@@ -1,20 +1,15 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Player[] m_players;
-    [SerializeField] private Enemy[] m_enemies;
-    [SerializeField] private CinemachineVirtualCamera m_camera;
 
+    [SerializeField] GameObject m_levelMainMenu;
 
     public static GameManager instance;
     public bool dontDestroyOnLoad;
-
-    public Player[] Players { get => m_players; }
-    public CinemachineVirtualCamera Camera { get => m_camera; }
 
     private void Awake()
     {
@@ -25,16 +20,17 @@ public class GameManager : MonoBehaviour
             {
                 DontDestroyOnLoad(gameObject);
             }
-            else
-            {
-                Destroy(gameObject);
-            }
         }
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     private void Start()
     {
-        
+
     }
 
     private void Update()
@@ -43,10 +39,19 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void NextLevel()
+    {
+        SceneManager.LoadScene("Level_1");
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 
     public void RestartLevel()
     {
-        throw new NotImplementedException();
+        SceneManager.LoadScene("Level_1");
     }
 
     public void LoadLevel()
@@ -69,5 +74,21 @@ public class GameManager : MonoBehaviour
     public void LoseLevel()
     {
         Debug.Log("YOU LOSE!!!!");
+    }
+
+    public void ToggleMainMenu()
+    {
+        return;
+        //TODO arreglar main menu
+        /*
+        bool menuIsActive = m_levelMainMenu.activeSelf;
+        m_levelMainMenu.SetActive(!menuIsActive);
+        */
+    }
+
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

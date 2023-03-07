@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de83870f087448548970a9f640a4bad4, type: 3}
+  m_Name: New Enemy Data
+  m_EditorClassIdentifier: 
+  m_rotationSpeed: 10
+  m_visionRange: 10.6
+  m_viewConeAngle: 80
+  m_pursuingMaxTime: 5
+  m_shootingMaxTime: 2
+  VIEWCONE_COLOR_PATROL: {r: 0, g: 1, b: 0, a: 1}
+  VIEWCONE_COLOR_WARNING: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  VIEWCONE_COLOR_DANGER: {r: 1, g: 0, b: 0, a: 1}

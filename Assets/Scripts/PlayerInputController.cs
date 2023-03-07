@@ -19,6 +19,7 @@ public class PlayerInputController : MonoBehaviour
     [SerializeField] private KeyCode m_saveLevelKeyCode = KeyCode.F5;
     [SerializeField] private KeyCode m_loadLevelKeyCode = KeyCode.F8;
     [SerializeField] private KeyCode m_restartLevelKeyCode = KeyCode.R;
+    [SerializeField] private KeyCode m_mainMenuKeyCode = KeyCode.Escape;
 
 
     public static PlayerInputController instance;
@@ -33,11 +34,12 @@ public class PlayerInputController : MonoBehaviour
             {
                 DontDestroyOnLoad(gameObject);
             }
-            else
-            {
-                Destroy(gameObject);
-            }
         }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
     }
 
     private void Start()
@@ -87,6 +89,10 @@ public class PlayerInputController : MonoBehaviour
         else if (Input.GetKeyDown(m_restartLevelKeyCode))
         {
             m_gameManager.RestartLevel();
+        }
+        else if (Input.GetKeyDown(m_mainMenuKeyCode))
+        {
+            m_gameManager.ToggleMainMenu();
         }
     }
 

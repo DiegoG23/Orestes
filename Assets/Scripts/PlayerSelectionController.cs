@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class PlayerSelectionController : MonoBehaviour
 {
-    private GameManager m_gameManager;
-
+    private LevelController m_LevelController;
 
     public static PlayerSelectionController instance;
     public bool dontDestroyOnLoad;
@@ -20,20 +19,20 @@ public class PlayerSelectionController : MonoBehaviour
             {
                 DontDestroyOnLoad(gameObject);
             }
-            else
-            {
-                Destroy(gameObject);
-            }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
 
     private void Start()
     {
-        m_gameManager = GameManager.instance;
+        m_LevelController = LevelController.instance;
 
         SelectPlayer(0);
-        //m_gameManager.Camera.Follow = m_gameManager.Players[0].transform;
+        //m_LevelController.Camera.Follow = m_LevelController.Players[0].transform;
     }
 
     // TODO Optimizar creando una colección que mantenga los players seleccionados dentro del controlador
@@ -41,7 +40,7 @@ public class PlayerSelectionController : MonoBehaviour
     {
         List<Player> result = new List<Player>();
 
-        foreach (Player player in m_gameManager.Players)
+        foreach (Player player in m_LevelController.Players)
         {
             if (player.IsSelected && !player.IsDead)
             {
@@ -55,18 +54,18 @@ public class PlayerSelectionController : MonoBehaviour
     public void SwitchSelectedPlayer()
     {
         Player l_nextSelectedPlayer = null;
-        int l_playersLength = m_gameManager.Players.Length;
+        int l_playersLength = m_LevelController.Players.Length;
         // deselecciono todos y me guardo la referencia al que tengo que seleccionar (siguiente al primer seleccionado actual)
         for (int i = 0; i < l_playersLength; i++)
         {
-            if (l_nextSelectedPlayer == null && m_gameManager.Players[i].IsSelected)
+            if (l_nextSelectedPlayer == null && m_LevelController.Players[i].IsSelected)
             {
-                l_nextSelectedPlayer = m_gameManager.Players[(i + 1) % l_playersLength];
+                l_nextSelectedPlayer = m_LevelController.Players[(i + 1) % l_playersLength];
             }
-            m_gameManager.Players[i].IsSelected = false;
+            m_LevelController.Players[i].IsSelected = false;
         }
         l_nextSelectedPlayer.IsSelected = true;
-        m_gameManager.Camera.Follow = l_nextSelectedPlayer.transform;
+        m_LevelController.Camera.Follow = l_nextSelectedPlayer.transform;
     }
 
     public Player GetSelectedPlayer()
@@ -81,13 +80,13 @@ public class PlayerSelectionController : MonoBehaviour
 
     public void SelectPlayer(int p_playerIndex)
     {
-        if (p_playerIndex < 0 || p_playerIndex >= m_gameManager.Players.Length)
+        if (p_playerIndex < 0 || p_playerIndex >= m_LevelController.Players.Length)
         {
             Debug.LogError("Invalid player index!");
             return;
         }
-        Player l_player = m_gameManager.Players[p_playerIndex];
-        foreach (Player player in m_gameManager.Players)
+        Player l_player = m_LevelController.Players[p_playerIndex];
+        foreach (Player player in m_LevelController.Players)
         {
             player.IsSelected = (player == l_player);
         }
@@ -99,12 +98,12 @@ public class PlayerSelectionController : MonoBehaviour
     //Cuando se selecciona/deselecciona un player con Ctrl presionado
     public void ToggleSelectedPlayer(int p_playerIndex)
     {
-        if (p_playerIndex < 0 || p_playerIndex >= m_gameManager.Players.Length)
+        if (p_playerIndex < 0 || p_playerIndex >= m_LevelController.Players.Length)
         {
             Debug.LogError("Invalid player index!");
             return;
         }
-        Player l_player = m_gameManager.Players[p_playerIndex];
+        Player l_player = m_LevelController.Players[p_playerIndex];
 
         l_player.IsSelected = !l_player.IsSelected;
 

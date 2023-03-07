@@ -44,9 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec8d0642be987b4a88c3f8a5528503f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_players:
-  - {fileID: 0}
-  - {fileID: 0}
-  m_enemies: []
-  m_camera: {fileID: 0}
+  m_mainMenuPrefab: {fileID: 1019315570533374390, guid: 6628a9ed1e5b9fe49a0b0e4888516db4,
+    type: 3}
   dontDestroyOnLoad: 1
