@@ -5,9 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-
-    [SerializeField] GameObject m_levelMainMenu;
-
     public static GameManager instance;
     public bool dontDestroyOnLoad;
 
@@ -39,9 +36,14 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void NextLevel()
+    public void NewGame()
     {
         SceneManager.LoadScene("Level_1");
+    }
+
+    public void Credits()
+    {
+        SceneManager.LoadScene("Credits");
     }
 
     public void MainMenu()
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene("Level_1");
+        SceneManager.LoadScene("Level_1",LoadSceneMode.Single);
     }
 
     public void LoadLevel()
@@ -75,17 +77,6 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("YOU LOSE!!!!");
     }
-
-    public void ToggleMainMenu()
-    {
-        return;
-        //TODO arreglar main menu
-        /*
-        bool menuIsActive = m_levelMainMenu.activeSelf;
-        m_levelMainMenu.SetActive(!menuIsActive);
-        */
-    }
-
 
     public void QuitGame()
     {

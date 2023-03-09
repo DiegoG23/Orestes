@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -7,6 +10,10 @@ public class PlayerInputController : MonoBehaviour
 
     // PLAYER SELECTION
     [SerializeField] private KeyCode m_switchPlayerKeyCode = KeyCode.Tab;
+    [SerializeField] private KeyCode m_selectPlayerOneKeyCode = KeyCode.Alpha1;
+    [SerializeField] private KeyCode m_selectPlayerTwoKeyCode = KeyCode.Alpha2;
+    //[SerializeField] private KeyCode m_selectPlayerThreeKeyCode = KeyCode.Alpha3;
+    //[SerializeField] private KeyCode m_selectPlayerFourKeyCode = KeyCode.Alpha4;
 
     // PLAYER ACTIONS
     [SerializeField] protected KeyCode m_attackKeyCode = KeyCode.A;
@@ -19,7 +26,13 @@ public class PlayerInputController : MonoBehaviour
     [SerializeField] private KeyCode m_saveLevelKeyCode = KeyCode.F5;
     [SerializeField] private KeyCode m_loadLevelKeyCode = KeyCode.F8;
     [SerializeField] private KeyCode m_restartLevelKeyCode = KeyCode.R;
-    [SerializeField] private KeyCode m_mainMenuKeyCode = KeyCode.Escape;
+    [SerializeField] private KeyCode m_levelMenuKeyCode = KeyCode.Escape;
+
+    //ACTIONS
+    public UnityEvent OnToggleLevelMenu;
+    public UnityEvent OnRestartLevel;
+    public UnityEvent OnSwitchPlayer;
+
 
 
     public static PlayerInputController instance;
@@ -57,14 +70,25 @@ public class PlayerInputController : MonoBehaviour
 
     private void KeyboardHandler()
     {
+        // TODO Analizar cambiar ifelses por un Switch
+
+
         // PLAYER SELECTION
         if (Input.GetKeyDown(m_switchPlayerKeyCode))
         {
-            m_playerSelectionController.SwitchSelectedPlayer();
+            OnSwitchPlayer.Invoke();
+        }
+        else if (Input.GetKeyDown(m_selectPlayerOneKeyCode))
+        {
+            m_playerSelectionController.SelectPlayer(0);
+        }
+        else if (Input.GetKeyDown(m_selectPlayerTwoKeyCode))
+        {
+            m_playerSelectionController.SelectPlayer(1);
         }
 
         // PLAYER ACTIONS
-        if (Input.GetKeyDown(m_crouchKeyCode))
+        else if (Input.GetKeyDown(m_crouchKeyCode))
         {
             foreach (Player l_player in m_playerSelectionController.GetSelectedPlayers())
             {
@@ -72,13 +96,15 @@ public class PlayerInputController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(m_abilityOneKeyCode))
+        else if (Input.GetKeyDown(m_abilityOneKeyCode))
         {
             m_playerSelectionController.GetSelectedPlayer()?.TriggerAbilityOne();
         }
 
+
+
         // GAME PERSISTANCE
-        if (Input.GetKeyDown(m_saveLevelKeyCode))
+        else if (Input.GetKeyDown(m_saveLevelKeyCode))
         {
             m_gameManager.SaveLevel();
         }
@@ -88,18 +114,21 @@ public class PlayerInputController : MonoBehaviour
         }
         else if (Input.GetKeyDown(m_restartLevelKeyCode))
         {
-            m_gameManager.RestartLevel();
+            OnRestartLevel?.Invoke();
+            //m_gameManager.RestartLevel();
         }
-        else if (Input.GetKeyDown(m_mainMenuKeyCode))
+
+
+        else if (Input.GetKeyDown(m_levelMenuKeyCode))
         {
-            m_gameManager.ToggleMainMenu();
+            OnToggleLevelMenu?.Invoke();
         }
     }
 
 
     public void ClickHandler()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             Debug.Log("Moving Player!!!");
             RaycastHit hit;

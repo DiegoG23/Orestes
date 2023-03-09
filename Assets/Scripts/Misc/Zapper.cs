@@ -43,9 +43,9 @@ public class Zapper : MonoBehaviour
         {
             if(other.TryGetComponent(out Enemy enemy))
             {
+                enemy.Disable();
                 Rigidbody enemyRigidbody = enemy.GetComponent<Rigidbody>();
                 enemyRigidbody.AddExplosionForce(explosionforce, transform.position, explosionradius);
-                enemy.Disable();
             }
         }
     }

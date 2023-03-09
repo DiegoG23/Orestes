@@ -8,8 +8,34 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] Animator IcarusAnimator;
     [SerializeField] Animator DroneAnimator;
 
+    private GameManager m_gameManager;
+
+    public static MainMenuController instance;
+    public bool dontDestroyOnLoad;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            if (dontDestroyOnLoad)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+
+    // Start is called before the first frame update
     void Start()
     {
+        m_gameManager = GameManager.instance;
+
         ElectraAnimator.SetBool("isMainMenu", true);
         IcarusAnimator.SetBool("isMainMenu", true);
         DroneAnimator.SetBool("isMainMenu", true);
@@ -20,4 +46,23 @@ public class MainMenuController : MonoBehaviour
     {
         
     }
+
+
+    public void NewGame()
+    {
+        m_gameManager.NewGame();
+    }
+
+    public void Credits()
+    {
+        m_gameManager.Credits();
+
+    }
+
+    public void Quit()
+    {
+        m_gameManager.QuitGame();
+
+    }
+
 }

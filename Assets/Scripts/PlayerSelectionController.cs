@@ -86,10 +86,16 @@ public class PlayerSelectionController : MonoBehaviour
             return;
         }
         Player l_player = m_LevelController.Players[p_playerIndex];
+        if (l_player == null)
+        {
+            Debug.LogError("Player not found!");
+            return;
+        }
         foreach (Player player in m_LevelController.Players)
         {
             player.IsSelected = (player == l_player);
         }
+        m_LevelController.Camera.Follow = l_player.transform;
         // TODO Solucionar que la cámara siga al mouse y no al jugador
         //m_camera.Follow = l_player.transform;
     }
